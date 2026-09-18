@@ -1,5 +1,8 @@
+import {useState} from 'react';
 
 export default function Gameboard (){
+const [pos,setPos] = useState(0);
+
     const positions = [
         {number:0, x: 60, y:30},
         {number:1, x: 110, y:50},
@@ -20,14 +23,20 @@ export default function Gameboard (){
     ]
     const player = {
         name:"Player 1",
-        position:0
+        position:pos
     }
-    console.log(positions[0]);
+
+  let gameFinished = pos === positions.length-1;
+  console.log (positions.length);
     
     const playerPosition = positions.find((position)=>{
         return player.position === position.number;
     })
 
+    function handleClick(){
+        setPos((prevPos)=>prevPos+1);
+        console.log(pos);
+    }
     return (
         <div id="gameboard">
             {positions.map(position => {
@@ -45,12 +54,16 @@ export default function Gameboard (){
             <div 
             className="Pioni"
             style={{
-                left:playerPosition.x ,
-                top:playerPosition.y
+                left:playerPosition.x +30,
+                top:playerPosition.y+5
             }}
             >
             {player.name}
             </div>
+           {!gameFinished ? 
+           <button onClick={handleClick}>
+                Move on 
+            </button>:<p>Finished</p>}
         </div>
     );
 }

@@ -2,6 +2,10 @@ export default function Players (){
 
 
     return (
-        <div>Players</div>
+        <div>
+            <label htmlFor=""></label>
+            <input type="text" name="" id="" />
+            <button>Save</button>
+        </div>
     );
 }
