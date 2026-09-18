@@ -52,7 +52,7 @@ const [pos,setPos] = useState(0);
                 );
             })}
             <div 
-            className="Pioni"
+            className="pawn"
             style={{
                 left:playerPosition.x +30,
                 top:playerPosition.y+5

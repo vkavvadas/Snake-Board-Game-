@@ -11,8 +11,12 @@ function App() {
     <>
     <Header />
     <main>
-      <Players />
-      <Dice />
+      <div className="playerMenu">
+        <Players />
+        <Players />
+        <Dice />
+      </div>
+      
       <Gameboard />
       <Logs />
     </main>
