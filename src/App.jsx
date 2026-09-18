@@ -9,12 +9,14 @@ function App() {
 
   return (
     <>
-    <Header/>
-    <Players></Players>
-    <Dice></Dice>
-    <Gameboard></Gameboard> 
-    <Logs></Logs>
-    <Footer></Footer>
+    <Header />
+    <main>
+      <Players />
+      <Dice />
+      <Gameboard />
+      <Logs />
+    </main>
+    <Footer />
     </>
   );
 }
