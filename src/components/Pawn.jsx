@@ -5,7 +5,7 @@ export default function Pawn({player , positions}){
     return <div 
         className="pawn"
         style={{
-            left:currentPosition.x +30,
+            left:player.id===1&&player?currentPosition.x +10:currentPosition.x +50,
             top:currentPosition.y+5,
             backgroundColor:player.id===1?"blue":"yellow"
         }}
