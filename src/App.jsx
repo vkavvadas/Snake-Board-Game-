@@ -29,37 +29,62 @@ const positions = [
 
 
 function App() {
-
-  const [pos,setPos] = useState(0);
+  
   const [rollResult, setRollResult] = useState();
+  const [players, setPlayers] = useState([
+    {
+    id:1,
+    name:"Player 1",
+    position:0,
+    active:true
+    },
+    {
+    id:2,
+    name:"Player 2",
+    position:0,
+    active:false
+    },
+    ]);
+
+  
+  
+  function rollDice(){
+    return Math.floor(Math.random()*6+1);
+  }
+  function handleRoll(){
+    const result = /*rollDice()+*/rollDice();
+    setRollResult(result);
+    setPlayers(prevPlayer=>{
+      return prevPlayer.map(player=>{
+        return ( player.active ?
+          {
+          ...player,
+          position:player.position+result,
+          active:!player.active
+        }
+        :
+        {
+          ...player,
+          active:!player.active
+        }
+      );
+      });
+    });
+  }
 
 
-    const player = {
-      name:"Player 1",
-      position:pos
-    }
-
-    function rollDice(){
-      return Math.floor(Math.random()*6+1);
-    }
-    function handleRoll(){
-      const result = /*rollDice()+*/rollDice();
-       setRollResult(result);
-       setPos((prevPos)=>{
-        return prevPos+result>positions.length -1 ?positions.length -1 :prevPos+result});
-    }
-
+  console.log(players);
   return (
     <>
     <Header />
     <main>
       <div className="playerMenu">
-        <Players name="Player 1"/>
-        <Players name="Player 1"/>
+        <Players player={players[0]}/>
+        <Players player={players[1]}/>
         <Dice onRoll={handleRoll} result={rollResult}/>
       </div>
       
-      <Gameboard positions={positions} currentPos={pos} player={player}/>
+      <Gameboard positions={positions} players={players}/>
 
       <Logs />
     </main>

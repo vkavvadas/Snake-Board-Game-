@@ -1,17 +1,10 @@
 
-export default function Gameboard ({positions, currentPos ,player}){
+import Pawn from './Pawn.jsx'
+
+export default function Gameboard ({positions ,players}){
 
 
-
-
-
-  let gameFinished = currentPos >= positions.length-1;
-  console.log (positions.length);
     
-    const playerPosition = positions.find((position)=>{
-        return player.position === position.number;
-    })
-
 
     return (
         <div id="gameboard">
@@ -27,16 +20,9 @@ export default function Gameboard ({positions, currentPos ,player}){
                     </div>
                 );
             })}
-            {!gameFinished && <div 
-            className="pawn"
-            style={{
-                left:playerPosition.x +30,
-                top:playerPosition.y+5
-            }}
-            >
-            {player.name}
-            </div>}
-            {gameFinished && <p> {player.name} Wins!!</p>}
+        <Pawn positions={positions} player={players[0]}/> 
+        <Pawn positions={positions} player={players[1]}/>   
+
         </div>
     );
 }
