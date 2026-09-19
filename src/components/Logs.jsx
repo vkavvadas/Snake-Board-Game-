@@ -1,6 +1,6 @@
 export default function Logs (){
 
     return (
-        <div>Logs</div>
+        <div id="logs">Logs</div>
     );
 }

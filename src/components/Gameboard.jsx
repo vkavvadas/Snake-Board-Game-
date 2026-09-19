@@ -23,7 +23,7 @@ export default function Gameboard ({positions ,players}){
                     </div>
                 );
             })}
-            {gameFinished && <p>Game Finished with winner {gameWinner.name}</p>}
+            {gameFinished && <p id="winning">Game Finished with winner {gameWinner.name}</p>}
         <Pawn positions={positions} player={players[0]}/> 
         <Pawn positions={positions} player={players[1]}/>   
         
