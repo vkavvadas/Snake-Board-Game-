@@ -5,7 +5,7 @@ export default function Dice ({onRoll, result, diceDisabled}){
         <div className="dice">
             <button onClick={onRoll} disabled={diceDisabled}>Roll
             </button>
-            {result && <p>{result}</p>}
+            <span>{result && <p>{result}</p>}</span>
 
         </div>
     );

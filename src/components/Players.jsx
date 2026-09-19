@@ -1,12 +1,18 @@
-export default function Players ({player}){
+import { useState } from "react";
 
+export default function Players ({player, handleInputs}){
+    const [playerName, setPlayerName] = useState(player.name);
 
     return (
-        <div className="playerInput" style={{
-            backgroundColor: player.id === 1 ?"blue":"yellow"}}>
+        <div id="playerInput" 
+            style={{
+                backgroundColor: player.id === 1 ?"blue":"yellow"}
+                }
+            key={player.id}
+            className={player.active ? "active" : undefined }>
             <label htmlFor=""></label>
-            <input type="text" name="" id="" />
-            <button>Save</button>
+            <input type="text" value={playerName} onChange={event=>setPlayerName(event.target.value)} />
+            <button onClick={()=>handleInputs(playerName,player.id)}>Save</button>
         </div >
 
         

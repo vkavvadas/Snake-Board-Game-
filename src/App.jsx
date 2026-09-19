@@ -89,7 +89,8 @@ function App() {
   function rollDice(){
     return Math.floor(Math.random()*6+1);
   }
- function handleRoll() {
+
+  function handleRoll() {
   const result = rollDice() + rollDice();
   setRollResult(result);
 
@@ -123,7 +124,21 @@ function App() {
 
     return updatedPlayers;
   });
-}
+  }
+
+  function handleChange(name,id){
+      setPlayers(players.map(player=>{
+        return player.id===id 
+        ?         
+        {
+        ...player,
+        name:name
+        }
+        :
+          player
+        ;
+      }));
+  }
 
 
   return (
@@ -131,8 +146,8 @@ function App() {
     <Header />
     <main>
       <div className="playerMenu">
-        <Players player={players[0]}/>
-        <Players player={players[1]}/>
+        <Players player={players[0]} handleInputs={handleChange}/>
+        <Players player={players[1]} handleInputs={handleChange}/>
         {<Dice onRoll={handleRoll} result={rollResult} diceDisabled={diceDisabled}/>}
       </div>
       
