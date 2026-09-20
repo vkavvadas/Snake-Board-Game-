@@ -69,7 +69,7 @@ const positions = [
 function App() {
   
   const [diceDisabled, setDiceDisabled] = useState(false);
-  const [rollResult, setRollResult] = useState();
+  const [rollResult, setRollResult] = useState([]);
   const [players, setPlayers] = useState([
     {
     id:1,
@@ -92,10 +92,10 @@ function App() {
   }
 
   function handleRoll() {
-    const result = rollDice() + rollDice();
-    
+    const result =[rollDice() , rollDice()];
+    const resultTotal = result[0]+result[1];
     const activePlayer = players.find(player=>player.active===true);
-    const newPosition = activePlayer.position+result>49?49:activePlayer.position+result;
+    const newPosition = activePlayer.position+resultTotal>49?49:activePlayer.position+resultTotal;
     const currentlog = {
       name:activePlayer.name,
       roll:result,

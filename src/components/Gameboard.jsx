@@ -19,7 +19,7 @@ export default function Gameboard ({positions ,players}){
                     style={{left:`${position.x}px` ,
                             top:`${position.y}px`}}
                     >
-                        {position.number}
+                        {position.number+1}
                     </div>
                 );
             })}
