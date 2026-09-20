@@ -102,3 +102,19 @@ footer {
     transform: translateX(-50%);
     margin: 0;
 }
+
+#logs{
+  margin:auto;
+  width: 800px;
+  height: 280px;
+  border: 2px solid;
+  border-radius: 20px;
+  display:flex;
+  justify-content: space-around;
+}
+
+#logs #history,
+#logs #turns{
+  
+ 
+}

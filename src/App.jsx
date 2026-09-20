@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState} from 'react';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
@@ -68,6 +68,7 @@ const positions = [
 
 function App() {
   
+  const [diceDisabled, setDiceDisabled] = useState(false);
   const [rollResult, setRollResult] = useState();
   const [players, setPlayers] = useState([
     {
@@ -83,47 +84,53 @@ function App() {
     active:false
     },
     ]);
+  const [logs, setLogs] = useState([]);
 
-  const [diceDisabled, setDiceDisabled] = useState(false);
   
   function rollDice(){
     return Math.floor(Math.random()*6+1);
   }
 
   function handleRoll() {
-  const result = rollDice() + rollDice();
-  setRollResult(result);
-
-  setPlayers(prevPlayers => {
-
-    const updatedPlayers = prevPlayers.map(player => {
-      return (
-        player.active
-          ? {
-              ...player,
-              position:
-                player.position + result > 49
-                  ? 49
-                  : player.position + result,
-              active: !player.active
-            }
-          : {
-              ...player,
-              active: !player.active
-            }
+    const result = rollDice() + rollDice();
+    
+    const activePlayer = players.find(player=>player.active===true);
+    const newPosition = activePlayer.position+result>49?49:activePlayer.position+result;
+    const currentlog = {
+      name:activePlayer.name,
+      roll:result,
+      initPos:activePlayer.position,
+      nextPos:newPosition,
+      winner:newPosition===49
+    };
+    setRollResult(result);
+    setPlayers(prevPlayers => {
+      const updatedPlayers = 
+        prevPlayers.map(player => {
+          return (
+            player.active
+              ? {
+                  ...player,
+                  position:newPosition,
+                  active: !player.active
+                }
+              : {
+                  ...player,
+                  active: !player.active
+                }
+          );
+        }
       );
+
+      return updatedPlayers;
     });
+    setLogs(prevLogs=>[
+      ...prevLogs,currentlog
+    ])
 
-    const winner = updatedPlayers.find(
-      player => player.position === 49
-    );
-
-    if (winner) {
+    if (currentlog.winner) {
       setDiceDisabled(true);
     }
-
-    return updatedPlayers;
-  });
   }
 
   function handleChange(name,id){
@@ -153,7 +160,7 @@ function App() {
       
       <Gameboard positions={positions} players={players}/>
 
-      <Logs />
+      <Logs logs={logs} player={players}/>
     </main>
     <Footer />
     </>
