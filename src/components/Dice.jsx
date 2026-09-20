@@ -20,9 +20,13 @@ export default function Dice ({onRoll, result, diceDisabled}){
     
     return (
         <div className="dice">
+            
             <button onClick={onRoll} disabled={diceDisabled}>Roll</button>
-            {result[0] && <img className="dices" src={diceImgs[result[0]-1]} alt=""  />}
-            {result[0] && <img className="dices" src={diceImgs[result[1]-1]} alt=""  />}
-        </div>
+       
+            <div className="diceImages">
+                {result[0] && <img className="dices" src={diceImgs[result[0]-1]} alt=""  />}
+                {result[1] && <img className="dices" src={diceImgs[result[1]-1]} alt=""  />}
+            </div>
+ </div>
     );
 }

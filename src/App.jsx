@@ -92,18 +92,19 @@ function App() {
   }
 
   function handleRoll() {
-    const result =[rollDice() , rollDice()];
-    const resultTotal = result[0]+result[1];
+    const tableLength=positions.length-1;
+    const results =[rollDice() , rollDice()];
+    const resultTotal = results.reduce((result,sum)=>{return result+sum});
     const activePlayer = players.find(player=>player.active===true);
-    const newPosition = activePlayer.position+resultTotal>49?49:activePlayer.position+resultTotal;
+    const newPosition = activePlayer.position+resultTotal>tableLength?tableLength:activePlayer.position+resultTotal;
     const currentlog = {
       name:activePlayer.name,
-      roll:result,
+      roll:results,
       initPos:activePlayer.position,
       nextPos:newPosition,
-      winner:newPosition===49
+      winner:newPosition===tableLength
     };
-    setRollResult(result);
+    setRollResult(results);
     setPlayers(prevPlayers => {
       const updatedPlayers = 
         prevPlayers.map(player => {

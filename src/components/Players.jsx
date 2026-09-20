@@ -6,7 +6,7 @@ export default function Players ({player, handleInputs}){
     return (
         <div id="playerInput" 
             style={{
-                backgroundColor: player.id === 1 ?"blue":"yellow"}
+                backgroundColor: player.id === 1 ?"#3f5f56":"#5f4b3a"}
                 }
             key={player.id}
             className={player.active ? "active" : undefined }>
