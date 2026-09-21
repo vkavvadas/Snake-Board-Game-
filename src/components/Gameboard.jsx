@@ -1,6 +1,6 @@
 
 import Pawn from './Pawn.jsx'
-import gameImg from '../assets/snakegameboard.png';
+import gameImg from '../assets/gameboard.png';
 
 export default function Gameboard ({positions ,players}){
 
@@ -10,7 +10,7 @@ export default function Gameboard ({positions ,players}){
     //console.log(gameWinner);
     return (
         <div id="gameboard">
-        {/*<img src={gameImg} alt="Snake Gameboard Image" />*/}
+        {<img src={gameImg} alt="Snake Gameboard Image" />}
             {positions.map(position => {
                 return (            
                     <div 
@@ -19,7 +19,6 @@ export default function Gameboard ({positions ,players}){
                     style={{left:`${position.x}px` ,
                             top:`${position.y}px`}}
                     >
-                        {position.number+1}
                     </div>
                 );
             })}

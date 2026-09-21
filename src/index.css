@@ -32,24 +32,36 @@ text-align: center;
   margin: 0 auto;
   position: relative;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  padding:0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#gameboard img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  object-fit: cover;
 }
 
 .square {
   position: absolute;
-  width: 100px;
-  height: 50px;
-  border: 1px solid #8c765c;
-  background: #e6d6b8;
+  width: 50px;
+  height: 30px;
+  border:none;
+  background:none;
   border-radius: 5px;
 }
 
 .pawn {
 position: absolute;
-width: 40px;
-height: 40px;
-border: 1px solid;
+width: 20px;
+height: 20px;
 background-color:rgb(179, 110, 64);
 border-radius: 50%;
+margin:0;
 }
 
 .playerMenu{
