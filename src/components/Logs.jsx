@@ -1,8 +1,11 @@
+import logImg from '../assets/log-background.png';
+
 export default function Logs ({logs,player}){
        const winnerlog = logs.find(log=>log.winner);
    
     return (
         <div id="logs">
+           
             <div id="history">
                 
                 {logs?[...logs].reverse().map((log,index )=>(index<6 && <p key={index}>{log.name} rolled {log.roll[0]} and {log.roll[1]} and moved: {log.initPos+1} → {log.nextPos+1}</p>)):""}
