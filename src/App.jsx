@@ -64,6 +64,35 @@ const positions = [
   { number: 49, x: 30, y: 465 }
 ];
 
+const positionEffects = {
+  2: { type:"teleport" },
+  3: { type:"reroll" },
+  4: { type:"extra-roll" },
+  5: { type:"none" },
+  6: { type:"forward", value:4 },
+  7: { type:"backward", value:4 },
+  8: { type:"teleport" },
+  9: { type:"extra-roll" },
+  10: { type:"reroll" },
+  11: { type:"skip-turn" },
+  12: { type:"trap" },
+  13: { type:"none" },
+  14: { type:"forward", value:4 },
+  15: { type:"backward", value:4 },
+  16: { type:"teleport" },
+  17: { type:"extra-roll" },
+  18: { type:"reroll" },
+  19: { type:"skip-turn" },
+  20: { type:"trap" },
+  21: { type:"reroll" },
+  22: { type:"forward", value:4 },
+  23: { type:"backward", value:4 },
+  24: { type:"teleport" },
+  25: { type:"reroll" },
+  26: { type:"forward", value:4 },
+  27: { type:"teleport" },
+};
+
 
 
 function App() {
@@ -105,33 +134,82 @@ function App() {
       winner:newPosition===tableLength
     };
     setRollResult(results);
-    setPlayers(prevPlayers => {
-      const updatedPlayers = 
-        prevPlayers.map(player => {
-          return (
-            player.active
-              ? {
-                  ...player,
-                  position:newPosition,
-                  active: !player.active
-                }
-              : {
-                  ...player,
-                  active: !player.active
-                }
-          );
+
+    
+    moveStep(activePlayer.position,newPosition,()=>{
+      const effect = positionEffects[newPosition];
+
+      if(effect) {
+        if (effect.type==="none")   console.log("Safe Tile");
+        else if (effect.type ==="forward") {
+          console.log("forward");
+          const forwardPosition  = newPosition+effect.value>tableLength ? tableLength:newPosition+effect.value;
+          moveStep (newPosition,forwardPosition,()=>{console.log("Forward Movement finished");})
         }
-      );
+        else if (effect.type ==="backward") {
+          console.log("backward");
+          const backwardPosition = newPosition - effect.value <0 ?0 :newPosition - effect.value;
+          moveStep(newPosition,backwardPosition,()=>{console.log("Backward Movement finished");})
+        }
+        else if (effect.type ==="teleport") {
+          console.log("teleport");
+          const teleportPosition = Math.floor(Math.random()*44)+1;
+          moveStep(newPosition,teleportPosition,()=>{console.log("Teleport Movement finished");})
+        }
+        else if (effect.type ==="trap") console.log("trap");
+        else if (effect.type ==="reroll") {
+          console.log("reroll");
+          moveStep(newPosition,activePlayer.position,()=>{console.log("Move back and reroll");})
+        }
+        else if (effect.type ==="extra-roll") console.log("extra-roll");
+        else if (effect.type ==="skip-turn") console.log("skip-turn");
+        else {console.log("else");}
+      }
+  
 
-      return updatedPlayers;
-    });
-    setLogs(prevLogs=>[
+      setLogs(prevLogs=>[
       ...prevLogs,currentlog
-    ])
+      ])
 
-    if (currentlog.winner) {
-      setDiceDisabled(true);
+      if (currentlog.winner) {
+        setDiceDisabled(true);
+      }
+    });
+
+
+  
+
+    function moveStep (currentPosition,targetPosition,onComplete){
+      
+        console.log(currentPosition,targetPosition);
+        if (currentPosition<targetPosition){
+          currentPosition+=1;
+          setPlayers((prevPlayers)=> {
+            return  prevPlayers.map((player) => {
+              return player.active ? 
+              {...player,position:currentPosition}:
+              player; 
+            })
+          });
+          setTimeout(()=> moveStep(currentPosition,targetPosition,onComplete),250);
+        }
+        else if (currentPosition>targetPosition){
+          currentPosition-=1;
+          setPlayers((prevPlayers)=> {
+            return  prevPlayers.map((player) => {
+              return player.active ? 
+              {...player,position:currentPosition}:
+              player; 
+            })
+          });
+          setTimeout(()=> moveStep(currentPosition,targetPosition,onComplete),250);
+        }
+        else {
+          onComplete();
+        }
     }
+
+
   }
 
   function handleChange(name,id){
