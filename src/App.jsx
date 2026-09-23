@@ -114,72 +114,14 @@ function App() {
     },
     ]);
   const [logs, setLogs] = useState([]);
+  const tableLength=positions.length-1;
 
   
   function rollDice(){
     return Math.floor(Math.random()*6+1);
   }
 
-  function handleRoll() {
-    const tableLength=positions.length-1;
-    const results =[rollDice() , rollDice()];
-    const resultTotal = results.reduce((result,sum)=>{return result+sum});
-    const activePlayer = players.find(player=>player.active===true);
-    const newPosition = activePlayer.position+resultTotal>tableLength?tableLength:activePlayer.position+resultTotal;
-    const currentlog = {
-      name:activePlayer.name,
-      roll:results,
-      initPos:activePlayer.position,
-      nextPos:newPosition,
-      winner:newPosition===tableLength
-    };
-    setRollResult(results);
-
-    
-    moveStep(activePlayer.position,newPosition,()=>{
-      const effect = positionEffects[newPosition];
-
-      if(effect) {
-        if (effect.type==="none")   console.log("Safe Tile");
-        else if (effect.type ==="forward") {
-          console.log("forward");
-          const forwardPosition  = newPosition+effect.value>tableLength ? tableLength:newPosition+effect.value;
-          moveStep (newPosition,forwardPosition,()=>{console.log("Forward Movement finished");})
-        }
-        else if (effect.type ==="backward") {
-          console.log("backward");
-          const backwardPosition = newPosition - effect.value <0 ?0 :newPosition - effect.value;
-          moveStep(newPosition,backwardPosition,()=>{console.log("Backward Movement finished");})
-        }
-        else if (effect.type ==="teleport") {
-          console.log("teleport");
-          const teleportPosition = Math.floor(Math.random()*44)+1;
-          moveStep(newPosition,teleportPosition,()=>{console.log("Teleport Movement finished");})
-        }
-        else if (effect.type ==="trap") console.log("trap");
-        else if (effect.type ==="reroll") {
-          console.log("reroll");
-          moveStep(newPosition,activePlayer.position,()=>{console.log("Move back and reroll");})
-        }
-        else if (effect.type ==="extra-roll") console.log("extra-roll");
-        else if (effect.type ==="skip-turn") console.log("skip-turn");
-        else {console.log("else");}
-      }
-  
-
-      setLogs(prevLogs=>[
-      ...prevLogs,currentlog
-      ])
-
-      if (currentlog.winner) {
-        setDiceDisabled(true);
-      }
-    });
-
-
-  
-
-    function moveStep (currentPosition,targetPosition,onComplete){
+   function moveStep (currentPosition,targetPosition,onComplete){
       
         console.log(currentPosition,targetPosition);
         if (currentPosition<targetPosition){
@@ -208,6 +150,131 @@ function App() {
           onComplete();
         }
     }
+
+  function handleEffect(effect,newPosition,prevPosition,onComplete){
+    if(!effect) {
+      onComplete();
+      return;
+    }
+    if (effect.type==="none")  {
+      console.log("Safe Tile");
+      onComplete();
+    } 
+    else if (effect.type ==="forward") {
+      console.log("forward");
+      const forwardPosition  = newPosition+effect.value>tableLength ? tableLength:newPosition+effect.value;
+      moveStep (newPosition,forwardPosition,()=>{
+        console.log("Forward Movement finished");
+        onComplete();})
+    }
+    else if (effect.type ==="backward") {
+      console.log("backward");
+      const backwardPosition = newPosition - effect.value <0 ?0 :newPosition - effect.value;
+      moveStep(newPosition,backwardPosition,()=>{
+        console.log("Backward Movement finished");
+        onComplete();
+      })
+    }
+    else if (effect.type ==="teleport") {
+      console.log("teleport");
+      const teleportPosition = Math.floor(Math.random()*44)+1;
+      moveStep(newPosition,teleportPosition,()=>{
+        console.log("Teleport Movement finished");
+        onComplete();})
+    }
+    else if (effect.type ==="trap") {
+      console.log("trap");
+      onComplete();
+    }
+    else if (effect.type ==="reroll") {
+      console.log("reroll");
+      const rerollStartPosition = newPosition;
+      moveStep(rerollStartPosition,prevPosition,()=>{
+        console.log("Move back and reroll");
+        const reRollResults = [rollDice(),rollDice()];
+        setRollResult(reRollResults);
+        const reRollTotal = reRollResults.reduce((result,sum)=>{ return result+sum;});
+        const reRollPosition = prevPosition + reRollTotal > tableLength ? tableLength : prevPosition + reRollTotal;
+        moveStep(prevPosition,reRollPosition,()=> {
+          console.log("Rerolled finished")
+          onComplete();});
+      })
+    }
+    else if (effect.type ==="extra-roll") {
+      console.log("extra-roll");
+      const extraRollResults = [rollDice(), rollDice()];
+      setRollResult(extraRollResults);
+      const extraRollTotal = extraRollResults.reduce((result,sum)=>{return result + sum;});
+      const extraRollPosition = newPosition + extraRollTotal > tableLength ? tableLength : newPosition + extraRollTotal;
+      moveStep(newPosition, extraRollPosition, () => {
+        console.log("Extra Roll Finished");
+
+        const newEffect = positionEffects[extraRollPosition];
+
+        if (newEffect) {
+          handleEffect(
+            newEffect,
+            extraRollPosition,
+            newPosition,
+            () => {
+              onComplete();
+            }
+          );
+        } else {
+          onComplete();
+        }
+      });  
+    }
+    else if (effect.type ==="skip-turn") {
+      console.log("skip-turn");
+        onComplete();
+    }
+    else {console.log("else");}
+  }
+    
+  
+
+  function handleRoll() {
+    
+    const results =[rollDice() , rollDice()];
+    const resultTotal = results.reduce((result,sum)=>{return result+sum});
+    const activePlayer = players.find(player=>player.active===true);
+    const newPosition = activePlayer.position+resultTotal>tableLength?tableLength:activePlayer.position+resultTotal;
+    const currentlog = {
+      name:activePlayer.name,
+      roll:results,
+      initPos:activePlayer.position,
+      nextPos:newPosition,
+      winner:newPosition===tableLength
+    };
+    setRollResult(results);
+
+    
+    moveStep(activePlayer.position,newPosition,()=>{
+      const effect = positionEffects[newPosition];
+
+      handleEffect(effect,newPosition,activePlayer.position,()=>{
+        console.log("Turned Completed");
+        setLogs(prevLogs=>[
+          ...prevLogs,currentlog
+          ])
+
+          if (currentlog.winner) {
+          setDiceDisabled(true);
+          }
+          else {
+            setPlayers(prevPlayers =>
+            prevPlayers.map(player => ({
+              ...player,
+              active: !player.active
+            }))
+          );
+
+          }
+
+
+        });    
+    });
 
 
   }
